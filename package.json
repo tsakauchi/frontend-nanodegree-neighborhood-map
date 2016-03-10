@@ -1,0 +1,28 @@
+{
+  "name": "frontend-nanodegree-neighborhood-map",
+  "version": "1.0.0",
+  "description": "Frontend Nanodegree Project 5A Neighborhood Map",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsakauchi/frontend-nanodegree-neighborhood-map.git"
+  },
+  "author": "Tsuginosuke Sakauchi <tsuginosuke.sakauchi@fairlandcircle.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsakauchi/frontend-nanodegree-neighborhood-map/issues"
+  },
+  "homepage": "https://github.com/tsakauchi/frontend-nanodegree-neighborhood-map#readme",
+  "devDependencies": {
+    "bower": "^1.7.7",
+    "grunt": "^0.4.5",
+    "grunt-contrib-cssmin": "^1.0.0",
+    "grunt-contrib-htmlmin": "^1.0.0",
+    "grunt-contrib-imagemin": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.0",
+    "grunt-newer": "^1.1.2"
+  }
+}

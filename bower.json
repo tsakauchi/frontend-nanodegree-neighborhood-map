@@ -1,0 +1,27 @@
+{
+  "name": "frontend-nanodegree-neighborhood-map",
+  "description": "Frontend Nanodegree Project 5A Neighborhood Map",
+  "main": "index.js",
+  "authors": [
+    "Tsuginosuke Sakauchi <tsuginosuke.sakauchi@fairlandcircle.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/tsakauchi/frontend-nanodegree-neighborhood-map",
+  "moduleType": [
+    "amd"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "^3.4.0",
+    "requirejs": "^2.1.22",
+    "jquery": "^2.2.1",
+    "normalize-css": "normalize.css#^3.0.3"
+  }
+}
