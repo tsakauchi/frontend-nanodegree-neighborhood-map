@@ -24,6 +24,7 @@ module.exports = function(grunt) {
           destPrefix: 'src/js/lib'
         },
         files: {
+          'async.js': 'requirejs-plugins/src/async.js',
           'knockout.js': 'knockout/dist/knockout.js',
           'require.js': 'requirejs/require.js',
           'jquery.js': 'jquery/dist/jquery.js',
