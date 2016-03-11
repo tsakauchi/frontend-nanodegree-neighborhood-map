@@ -1,7 +1,14 @@
-define(["jquery","knockout","app/model/AppModel"], function($,ko,AppModel) {
-  "use strict";
+define([
+  "app/globals",
+  "jquery",
+  "underscore",
+  "knockout",
+  "app/viewmodel/Locations"
+], function(c,$,_,ko,Locations) {
   $(function() {
-    ko.applyBindings(new AppModel());
-    //ko.applyBindings(new AppViewModel());
+    "use strict";
+
+    var locations = ko.utils.parseJson(window.localStorage.getItem(c.LOCAL_STORAGE_ITEM_KEY));
+    ko.applyBindings(new Locations(locations || []));
   });
 });
