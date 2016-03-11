@@ -7,6 +7,29 @@ module.exports = function(grunt) {
 
   // Grunt configuration
   grunt.initConfig({
+    bowercopy: {
+      options: {
+        srcPrefix: 'bower_components'
+      },
+      css: {
+        options: {
+          destPrefix: 'src/css/ext'
+        },
+        files: {
+          'normalize.css': 'normalize-css/normalize.css'
+        }
+      },
+      js: {
+        options: {
+          destPrefix: 'src/js/ext'
+        },
+        files: {
+          'knockout.js': 'knockout/dist/knockout.js',
+          'require.js': 'requirejs/require.js',
+          'jquery.js': 'jquery/dist/jquery.js'
+        }
+      }
+    },
     imagemin: {
       png: {
         options: {
@@ -88,14 +111,6 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load NPM tasks
-  grunt.loadNpmTasks('grunt-newer');
-  grunt.loadNpmTasks('grunt-contrib-htmlmin');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-imagemin');
-  grunt.loadNpmTasks('grunt-responsive-images');
-
   // Register default tasks
-  grunt.registerTask('default', ['newer:htmlmin','newer:cssmin','newer:uglify','newer:imagemin','newer:responsive_images']);
+  grunt.registerTask('default', ['bowercopy','newer:htmlmin','newer:cssmin','newer:uglify','newer:imagemin','newer:responsive_images']);
 };
