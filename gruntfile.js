@@ -13,7 +13,7 @@ module.exports = function(grunt) {
       },
       css: {
         options: {
-          destPrefix: 'src/css/ext'
+          destPrefix: 'src/css/lib'
         },
         files: {
           'normalize.css': 'normalize-css/normalize.css'
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       },
       js: {
         options: {
-          destPrefix: 'src/js/ext'
+          destPrefix: 'src/js/lib'
         },
         files: {
           'knockout.js': 'knockout/dist/knockout.js',
