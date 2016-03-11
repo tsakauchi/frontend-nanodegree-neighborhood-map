@@ -26,7 +26,8 @@ module.exports = function(grunt) {
         files: {
           'knockout.js': 'knockout/dist/knockout.js',
           'require.js': 'requirejs/require.js',
-          'jquery.js': 'jquery/dist/jquery.js'
+          'jquery.js': 'jquery/dist/jquery.js',
+          'underscore.js': 'underscore/underscore.js'
         }
       }
     },

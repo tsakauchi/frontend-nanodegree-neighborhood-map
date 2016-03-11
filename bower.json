@@ -22,6 +22,7 @@
     "knockout": "^3.4.0",
     "requirejs": "^2.1.22",
     "jquery": "^2.2.1",
-    "normalize-css": "normalize.css#^3.0.3"
+    "normalize-css": "normalize.css#^3.0.3",
+    "underscore": "^1.8.3"
   }
 }
