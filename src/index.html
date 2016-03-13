@@ -19,13 +19,9 @@
             <button>Add</button>
         </form>
         <label for="filter">Filter: </label><input type="text" id="filter" value="" data-bind="textInput: filter">
-        <ul id="location-list" data-bind="foreach: locations">
-            <li>My favorite location is <span data-bind="text: name"></span> !
-            <button class="remove" data-bind="click: $parent.remove">Remove</button></li>
-        </ul>
-
         <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
             <li>My filtered location is <span data-bind="text: name"></span> !
+            <button class="remove" data-bind="click: $parent.remove">Remove</button></li>
         </ul>
     </body>
 </html>

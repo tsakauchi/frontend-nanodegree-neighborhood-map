@@ -25,6 +25,7 @@ define([
     self.markers = {};
 
     self.addMarker = function(name) {
+      if (self.markers[name]) return;
       self.geocoder.geocode({ address: name }, function(results, status) {
         if (status == gmaps.GeocoderStatus.OK) {
           self.map.setCenter(results[0].geometry.location);
@@ -48,32 +49,46 @@ define([
       var name = $locn.val();
 
       self.addLocation(name);
-      self.addMarker(name);
 
       $locn.val("");
     };
 
     self.remove = function(location) {
-      if (self.markers[location.name()]) {
-        self.markers[location.name()].setMap(null);
-        delete self.markers[location.name()];
-      }
+      self.removeMarker(location.name());
       self.locations.remove(location);
+    };
+
+    self.removeMarker = function(name) {
+      if (!self.markers[name]) return;
+      self.markers[name].setMap(null);
+      delete self.markers[name];
+    };
+
+    self.addAllMarkers = function() {
+      ko.utils.arrayForEach(self.locations(), function(location) {
+        self.addMarker(location.name());
+      });
     };
 
     self.locationsFiltered = ko.computed(function() {
       if(!self.filter()) {
+        self.addAllMarkers();
         return self.locations(); 
       } else {
         return ko.utils.arrayFilter(self.locations(), function(location) {
-          return location.name().indexOf(self.filter()) > -1;
+          var name = location.name();
+          var filter = self.filter();
+          var isFilterTextMatchName = (name.toLowerCase().indexOf(filter.toLowerCase()) > -1);
+          if (isFilterTextMatchName)
+          {
+            self.addMarker(name);
+            return true;
+          } else {
+            self.removeMarker(name);
+            return false;
+          }
         });
       }
-    });
-
-    // initialize internal marker collection
-    ko.utils.arrayForEach(self.locations(), function(location) {
-      self.addMarker(location.name());
     });
 
     // internal computed observable that fires whenever anything changes in Locations
