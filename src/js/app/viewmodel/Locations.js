@@ -19,6 +19,8 @@ define([
       return new Location(location.name || {});
     }));
 
+    self.filter = ko.observable("");
+
     // non-persisted marker array
     self.markers = {};
 
@@ -58,6 +60,16 @@ define([
       }
       self.locations.remove(location);
     };
+
+    self.locationsFiltered = ko.computed(function() {
+      if(!self.filter()) {
+        return self.locations(); 
+      } else {
+        return ko.utils.arrayFilter(self.locations(), function(location) {
+          return location.name().indexOf(self.filter()) > -1;
+        });
+      }
+    });
 
     // initialize internal marker collection
     ko.utils.arrayForEach(self.locations(), function(location) {
