@@ -20,7 +20,7 @@
         </form>
         <label for="filter">Filter: </label><input type="text" id="filter" value="" data-bind="textInput: filter">
         <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
-            <li>My filtered location is <span data-bind="text: name"></span> !
+            <li data-bind="click: $parent.locationClickEventHandler">My filtered location is <span data-bind="text: name"></span> !
             <button class="remove" data-bind="click: $parent.remove">Remove</button></li>
         </ul>
     </body>

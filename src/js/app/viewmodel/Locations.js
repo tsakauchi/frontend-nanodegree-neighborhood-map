@@ -89,6 +89,22 @@ define([
       $locn.val("");
     };
 
+    self.locationClickEventHandler = function(location) {
+      var name = location.name();
+      if (!self.mapObjects[name]) return;
+
+      var marker = self.mapObjects[name].marker;
+      var info = self.mapObjects[name].info;
+
+      if(self.activeInfoWindow) {
+        self.activeInfoWindow.close();
+      }
+
+      info.open(self.map, marker);
+
+      self.activeInfoWindow = info;
+    };
+
     self.remove = function(location) {
       self.removeMarker(location.name());
       self.locations.remove(location);
