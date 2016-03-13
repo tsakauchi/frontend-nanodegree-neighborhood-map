@@ -14,7 +14,10 @@
     </head>
     <body>
         <div id="map"></div>
-        <button class="add" data-bind="click: add">Add</button>
+        <form data-bind="submit: submitEventHandler">
+            <label for="location">Location: </label><input type="text" id="location" value="">
+            <button>Add</button>
+        </form>
         <ul id="location-list" data-bind="foreach: locations">
             <li>My favorite location is <span data-bind="text: name"></span> !
             <button class="remove" data-bind="click: $parent.remove">Remove</button></li>
