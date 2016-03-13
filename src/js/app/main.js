@@ -14,7 +14,18 @@ define([
   });
 
   var locations = ko.utils.parseJson(window.localStorage.getItem(c.LOCAL_STORAGE_ITEM_KEY));
-  ko.applyBindings(new Locations(locations || [], map));
+
+  var defaultLocations = [
+    { name: "New Berlin, WI" },
+    { name: "Racine, WI" },
+    { name: "South Milwaukee, WI" },
+    { name: "Madison, WI" },
+    { name: "Milwaukee, WI" },
+  ];
+
+  if (!locations || locations.length < 1) locations = defaultLocations;
+
+  ko.applyBindings(new Locations(locations, map));
 
 
 
