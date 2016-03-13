@@ -21,18 +21,54 @@ define([
 
     self.filter = ko.observable("");
 
-    // non-persisted marker array
-    self.markers = {};
+    // non-persisted Google Maps object array
+    // indexed by location name
+    // mapobject = { name: (Name of marker), marker: (Google Maps Marker object), info: (Google Maps InfoWindow object) }
+    self.mapObjects = {};
+
+    // non-persisted Google Maps active info window
+    // used to close the last active window when next info window is opened
+    self.activeInfoWindow = null;
 
     self.addMarker = function(name) {
-      if (self.markers[name]) return;
+      if (self.mapObjects[name]) return;
+
       self.geocoder.geocode({ address: name }, function(results, status) {
         if (status == gmaps.GeocoderStatus.OK) {
-          self.map.setCenter(results[0].geometry.location);
-          self.markers[name] = new gmaps.Marker({
+
+          var position = results[0].geometry.location;
+
+          var content = '<h2>' + name + '</h2>' + 
+            '<p>infowindow content here!</p>';
+
+          var marker = new gmaps.Marker({
             map: self.map,
-            position: results[0].geometry.location
+            position: position,
+            title: name
           });
+
+          var info = new gmaps.InfoWindow({
+            content: content
+          });
+
+          gmaps.event.addListener(marker, 'click', function() {
+            if(self.activeInfoWindow) {
+              self.activeInfoWindow.close();
+            }
+
+            info.open(self.map, marker);
+
+            self.activeInfoWindow = info;
+          });
+
+          self.mapObjects[name] = {
+            name: name,
+            marker: marker,
+            info: info
+          };
+
+          self.map.setCenter(position);
+
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -59,9 +95,12 @@ define([
     };
 
     self.removeMarker = function(name) {
-      if (!self.markers[name]) return;
-      self.markers[name].setMap(null);
-      delete self.markers[name];
+      if (!self.mapObjects[name]) return;
+      self.mapObjects[name].marker.setMap(null);
+      delete self.mapObjects[name].name;
+      delete self.mapObjects[name].marker;
+      delete self.mapObjects[name].info;
+      delete self.mapObjects[name];
     };
 
     self.addAllMarkers = function() {
