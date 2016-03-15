@@ -39,8 +39,7 @@ define([
 
           var position = results[0].geometry.location;
 
-          var content = '<h2>' + name + '</h2>' + 
-            '<p>infowindow content here!</p>';
+          var content = '<h2>' + name + '</h2>';
 
           marker = new gmaps.Marker({
             map: self.map,
@@ -65,11 +64,52 @@ define([
             self.setActiveLocation(null);
           });
 
+          self.loadInfoWindowTextFromWikipedia(name, location.infoWindow);
+
           self.map.setCenter(position);
 
         } else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          console.log('Geocode was not successful for the following reason: ' + status);
         }
+      });
+    };
+
+    self.loadInfoWindowTextFromWikipedia = function(searchText, infoWindow) {
+      var wikiUrlAction = 'action=opensearch';
+      var wikiUrlSearch = 'search=' + searchText;
+      var wikiUrlFormat = 'format=json';
+      var wikiUrl = 'https://en.wikipedia.org/w/api.php?' + wikiUrlAction + '&' + wikiUrlSearch + '&' + wikiUrlFormat;
+      var wikiUrlErrorHandler = function(){
+          console.log("Failed to get Wikipedia articles for " + searchText);
+          clearTimeout();
+      };
+      var wikiUrlTimeoutHandler = setTimeout(wikiUrlErrorHandler,4000);
+      var wikiUrlCallbackHandler = function(data) { 
+        if(!data) return;
+        if(!data[1]) return;
+        if(!data[2]) return;
+        if(!data[3]) return;
+
+        var titles = data[1];
+        var snippets = data[2];
+        var web_urls = data[3];
+
+        if (titles.length > 0) {
+          infoWindow.content += '<h3>Wikipedia</h3>';
+          infoWindow.content += '<p>' + snippets[0] + '</p>' + '<p>' + web_urls[0] + '</p>';
+        } else {
+          console.log("No Wikipedia entry found for " + searchText);
+        }
+
+        clearTimeout(wikiUrlTimeoutHandler);
+      };
+
+      console.log("Send Wikipedia request: " + wikiUrl);
+      $.ajax({
+          url: wikiUrl,
+          dataType: 'jsonp',
+          type: 'POST',
+          success: wikiUrlCallbackHandler
       });
     };
 
