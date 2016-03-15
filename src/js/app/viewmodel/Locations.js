@@ -49,13 +49,13 @@ define([
             animation: gmaps.Animation.DROP
           });
 
-          var info = new gmaps.InfoWindow({
+          var infoWindow = new gmaps.InfoWindow({
             content: content
           });
 
           location.position = position;
           location.marker = marker;
-          location.info = info;
+          location.infoWindow = infoWindow;
 
           gmaps.event.addListener(marker, 'click', function() {
             self.setActiveLocation(location);
@@ -88,19 +88,16 @@ define([
     };
 
     self.setActiveLocation = function(location) {
-      var name = location.name();
-      var marker = location.marker;
-      var info = location.info;
-
-      if(self.activeLocation && self.activeLocation.info) {
+      if(self.activeLocation && self.activeLocation.infoWindow) {
         self.activeLocation.marker.setAnimation(null);
-        self.activeLocation.info.close();
+        self.activeLocation.infoWindow.close();
       }
 
-      info.open(self.map, marker);
-
-      self.activeLocation = location;
-      self.activeLocation.marker.setAnimation(gmaps.Animation.BOUNCE);
+      if (location && location.infoWindow) {
+        location.infoWindow.open(self.map, location.marker);
+        self.activeLocation = location;
+        self.activeLocation.marker.setAnimation(gmaps.Animation.BOUNCE);
+      }
     };
 
     self.remove = function(location) {

@@ -9,7 +9,7 @@ define([
     self.name = ko.observable(name);
     self.position = null;
     self.marker = null;
-    self.info = null;
+    self.infoWindow = null;
 
     // JSON returned by this function is what is persisted
     // in local storage.
