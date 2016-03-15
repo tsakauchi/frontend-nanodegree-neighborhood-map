@@ -16,22 +16,23 @@ define([
     self.geocoder = new gmaps.Geocoder();
 
     self.locations = ko.observableArray(ko.utils.arrayMap(locations, function (location) {
-      return new Location(location.name || {});
+      return new Location(location.name);
     }));
 
     self.filter = ko.observable("");
 
-    // non-persisted Google Maps object array
-    // indexed by location name
-    // mapobject = { name: (Name of marker), marker: (Google Maps Marker object), info: (Google Maps InfoWindow object) }
-    self.mapObjects = {};
+    self.activeLocation = null;
 
-    // non-persisted Google Maps active info window
-    // used to close the last active window when next info window is opened
-    self.activeInfoWindow = null;
+    self.addMarker = function(location) {
+      var marker = location.marker;
 
-    self.addMarker = function(name) {
-      if (self.mapObjects[name]) return;
+      // marker already exists, set map to show it
+      if (marker) {
+        marker.setMap(self.map);
+        return;
+      }
+
+      var name = location.name();
 
       self.geocoder.geocode({ address: name }, function(results, status) {
         if (status == gmaps.GeocoderStatus.OK) {
@@ -41,7 +42,7 @@ define([
           var content = '<h2>' + name + '</h2>' + 
             '<p>infowindow content here!</p>';
 
-          var marker = new gmaps.Marker({
+          marker = new gmaps.Marker({
             map: self.map,
             position: position,
             title: name
@@ -52,31 +53,28 @@ define([
           });
 
           gmaps.event.addListener(marker, 'click', function() {
-            if(self.activeInfoWindow) {
-              self.activeInfoWindow.close();
+            if(self.activeLocation && self.activeLocation.info) {
+              self.activeLocation.info.close();
             }
 
             info.open(self.map, marker);
 
-            self.activeInfoWindow = info;
+            self.activeLocation = location;
           });
-
-          self.mapObjects[name] = {
-            name: name,
-            marker: marker,
-            info: info
-          };
 
           self.map.setCenter(position);
 
+          location.position = position;
+          location.marker = marker;
+          location.info = info;
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
       });
     };
 
-    self.addLocation = function(name) {
-      self.locations.push(new Location(name));
+    self.add = function(location) {
+      self.locations.push(location);
     };
 
     self.submitEventHandler = function(formElement) {
@@ -84,44 +82,37 @@ define([
       var $locn = $form.find("#location");
       var name = $locn.val();
 
-      self.addLocation(name);
+      self.add(new Location(name));
 
       $locn.val("");
     };
 
     self.locationClickEventHandler = function(location) {
       var name = location.name();
-      if (!self.mapObjects[name]) return;
+      var marker = location.marker;
+      var info = location.info;
 
-      var marker = self.mapObjects[name].marker;
-      var info = self.mapObjects[name].info;
-
-      if(self.activeInfoWindow) {
-        self.activeInfoWindow.close();
+      if(self.activeLocation && self.activeLocation.info) {
+        self.activeLocation.info.close();
       }
 
       info.open(self.map, marker);
 
-      self.activeInfoWindow = info;
+      self.activeLocation = location;
     };
 
     self.remove = function(location) {
-      self.removeMarker(location.name());
+      self.removeMarker(location);
       self.locations.remove(location);
     };
 
-    self.removeMarker = function(name) {
-      if (!self.mapObjects[name]) return;
-      self.mapObjects[name].marker.setMap(null);
-      delete self.mapObjects[name].name;
-      delete self.mapObjects[name].marker;
-      delete self.mapObjects[name].info;
-      delete self.mapObjects[name];
+    self.removeMarker = function(location) {
+      location.marker.setMap(null);
     };
 
     self.addAllMarkers = function() {
       ko.utils.arrayForEach(self.locations(), function(location) {
-        self.addMarker(location.name());
+        self.addMarker(location);
       });
     };
 
@@ -136,10 +127,10 @@ define([
           var isFilterTextMatchName = (name.toLowerCase().indexOf(filter.toLowerCase()) > -1);
           if (isFilterTextMatchName)
           {
-            self.addMarker(name);
+            self.addMarker(location);
             return true;
           } else {
-            self.removeMarker(name);
+            self.removeMarker(location);
             return false;
           }
         });
@@ -148,11 +139,16 @@ define([
 
     // internal computed observable that fires whenever anything changes in Locations
     ko.computed(function () {
-      // store a clean copy to local storage, which also creates a dependency
-      // on the observableArray and all observables in each item
-      window.localStorage.setItem(c.LOCAL_STORAGE_ITEM_KEY, ko.toJSON(self.locations));
+      var persistedLocations = [];
+
+      ko.utils.arrayForEach(self.locations(), function(location) {
+        persistedLocations.push(location.persistedLocation());
+      });
+
+      window.localStorage.setItem(c.LOCAL_STORAGE_ITEM_KEY, ko.toJSON(persistedLocations));
     }).extend({
+      // save at most twice per second
       rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
-    }); // save at most twice per second
+    });
   };
 });
