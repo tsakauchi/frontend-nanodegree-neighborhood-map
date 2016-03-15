@@ -45,28 +45,24 @@ define([
           marker = new gmaps.Marker({
             map: self.map,
             position: position,
-            title: name
+            title: name,
+            animation: gmaps.Animation.DROP
           });
 
           var info = new gmaps.InfoWindow({
             content: content
           });
 
+          location.position = position;
+          location.marker = marker;
+          location.info = info;
+
           gmaps.event.addListener(marker, 'click', function() {
-            if(self.activeLocation && self.activeLocation.info) {
-              self.activeLocation.info.close();
-            }
-
-            info.open(self.map, marker);
-
-            self.activeLocation = location;
+            self.setActiveLocation(location);
           });
 
           self.map.setCenter(position);
 
-          location.position = position;
-          location.marker = marker;
-          location.info = info;
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -88,17 +84,23 @@ define([
     };
 
     self.locationClickEventHandler = function(location) {
+      self.setActiveLocation(location);
+    };
+
+    self.setActiveLocation = function(location) {
       var name = location.name();
       var marker = location.marker;
       var info = location.info;
 
       if(self.activeLocation && self.activeLocation.info) {
+        self.activeLocation.marker.setAnimation(null);
         self.activeLocation.info.close();
       }
 
       info.open(self.map, marker);
 
       self.activeLocation = location;
+      self.activeLocation.marker.setAnimation(gmaps.Animation.BOUNCE);
     };
 
     self.remove = function(location) {
