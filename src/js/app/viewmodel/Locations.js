@@ -93,6 +93,7 @@ define([
 
     self.setActiveLocation = function(location) {
       if(self.activeLocation && self.activeLocation.infoWindow) {
+        self.activeLocation.marker.setIcon("");
         self.activeLocation.marker.setAnimation(null);
         self.activeLocation.infoWindow.close();
       }
@@ -100,6 +101,9 @@ define([
       if (location && location.infoWindow) {
         location.infoWindow.open(self.map, location.marker);
         self.activeLocation = location;
+        // Google Map Icons
+        // http://stackoverflow.com/questions/17746740/google-map-icons-with-visualrefresh
+        self.activeLocation.marker.setIcon("http://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2");
         self.activeLocation.marker.setAnimation(gmaps.Animation.BOUNCE);
       }
     };
