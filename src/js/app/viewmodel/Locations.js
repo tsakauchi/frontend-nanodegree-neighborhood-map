@@ -61,6 +61,10 @@ define([
             self.setActiveLocation(location);
           });
 
+          gmaps.event.addListener(infoWindow, 'closeclick', function() {
+            self.setActiveLocation(null);
+          });
+
           self.map.setCenter(position);
 
         } else {
