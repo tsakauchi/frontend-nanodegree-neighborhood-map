@@ -15,6 +15,8 @@ define([
 
     self.geocoder = new gmaps.Geocoder();
 
+    self.bounds = new gmaps.LatLngBounds();
+
     self.locations = ko.observableArray(ko.utils.arrayMap(locations, function (location) {
       return new Location(location.name);
     }));
@@ -29,6 +31,8 @@ define([
       // marker already exists, set map to show it
       if (marker) {
         marker.setMap(self.map);
+        self.bounds.extend(marker.position);
+        self.map.fitBounds(self.bounds);
         return;
       }
 
@@ -38,6 +42,8 @@ define([
         if (status == gmaps.GeocoderStatus.OK) {
 
           var position = results[0].geometry.location;
+
+          self.bounds.extend(position);
 
           var content = '<h2>' + name + '</h2>';
 
@@ -66,7 +72,7 @@ define([
 
           self.loadInfoWindowTextFromWikipedia(name, location.infoWindow);
 
-          self.map.setCenter(position);
+          self.map.fitBounds(self.bounds);
 
         } else {
           console.log('Geocode was not successful for the following reason: ' + status);
@@ -164,6 +170,7 @@ define([
     };
 
     self.locationsFiltered = ko.computed(function() {
+      self.bounds = new gmaps.LatLngBounds();
       if(!self.filter()) {
         self.addAllMarkers();
         return self.locations(); 
