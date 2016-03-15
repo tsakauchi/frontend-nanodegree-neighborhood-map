@@ -138,7 +138,11 @@ define([
     };
 
     self.setActiveLocation = function(location) {
-      if(self.activeLocation && self.activeLocation.infoWindow) {
+      if (location === self.activeLocation) {
+        return;
+      }
+
+      if (self.activeLocation && self.activeLocation.infoWindow) {
         self.activeLocation.marker.setIcon("");
         self.activeLocation.marker.setAnimation(null);
         self.activeLocation.infoWindow.close();
