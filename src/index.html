@@ -19,6 +19,7 @@
             <button>Add</button>
         </form>
         <label for="filter">Filter: </label><input type="text" id="filter" value="" data-bind="textInput: filter">
+        <label for="filter-case">Case Sensitive?</label><input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive">
         <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
             <li><span data-bind="click: $parent.locationClickEventHandler">My filtered location is <span data-bind="text: name"></span> !</span>
             <button class="remove" data-bind="click: $parent.remove">Remove</button></li>

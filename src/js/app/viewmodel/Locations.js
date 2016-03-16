@@ -23,6 +23,8 @@ define([
 
     self.filter = ko.observable("");
 
+    self.isFilterCaseSensitive = ko.observable(false);
+
     self.activeLocation = null;
 
     self.addMarker = function(location) {
@@ -182,7 +184,14 @@ define([
         return ko.utils.arrayFilter(self.locations(), function(location) {
           var name = location.name();
           var filter = self.filter();
-          var isFilterTextMatchName = (name.toLowerCase().indexOf(filter.toLowerCase()) > -1);
+          var isFilterTextMatchName;
+
+          if (self.isFilterCaseSensitive()) {
+            isFilterTextMatchName = (name.indexOf(filter) > -1);
+          } else {
+            isFilterTextMatchName = (name.toLowerCase().indexOf(filter.toLowerCase()) > -1);
+          }
+
           if (isFilterTextMatchName)
           {
             self.addMarker(location);
