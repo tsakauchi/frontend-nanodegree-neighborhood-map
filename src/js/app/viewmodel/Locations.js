@@ -71,6 +71,8 @@ define([
           });
 
           self.loadInfoWindowTextFromWikipedia(name, location.infoWindow);
+          self.loadInfoWindowTextFromNewYorkTimes(name, location.infoWindow);
+          self.loadInfoWindowImageFromGoogleMaps(name, location.infoWindow);
 
           self.map.fitBounds(self.bounds);
 
@@ -78,6 +80,15 @@ define([
           console.log('Geocode was not successful for the following reason: ' + status);
         }
       });
+    };
+
+    self.loadInfoWindowImageFromGoogleMaps = function(searchText, infoWindow) {
+      var width = 300;
+      var height = 100;
+      var streetviewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + width + "x" + height + "&location=" + searchText + "&heading=0&pitch=0";
+
+      infoWindow.content += '<h3>Street View</h3>';
+      infoWindow.content += '<img class="bgimg" src="' + streetviewUrl + '">'
     };
 
     self.loadInfoWindowTextFromWikipedia = function(searchText, infoWindow) {
@@ -118,6 +129,36 @@ define([
           success: wikiUrlCallbackHandler
       });
     };
+
+    self.loadInfoWindowTextFromNewYorkTimes = function(searchText, infoWindow) {
+      var nytUrlFilteredQuery = 'fq=type_of_material:("News") AND "' + searchText + '"';
+      var nytUrlSortOrder = 'sort=newest';
+      var nytUrlFields = 'fl=headline,pub_date,snippet,web_url';
+      var nytUrlApiKey = 'api-key=9df2b415e47006caa7d29120aeec20f6:9:74652536';
+      var nytUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?' + nytUrlFilteredQuery + '&' + nytUrlSortOrder + '&' + nytUrlFields + '&' + nytUrlApiKey;
+      var nytUrlCallbackHandler = function(data) {
+
+          if(!data) return;
+          if(!data.response) return;
+          if(!data.response.docs) return;
+
+          if (data.response.docs.length > 0) {
+            var article = data.response.docs[0];
+            infoWindow.content += '<h3>New York Times</h3>';
+            infoWindow.content += '<h4>' + article.headline.main + '</h4>';
+            infoWindow.content += '<p>' + article.snippet + '</p>' + '<p>' + article.web_url + '</p>';
+          } else {
+            console.log("No NYT entry found for " + searchText);
+          }
+      };
+      var nytUrlErrorHandler = function(){
+          $nytHeaderElem.text("Failed to get New York Times articles for " + city);
+      };
+
+      // New York Times Request
+      $.getJSON(nytUrl,nytUrlCallbackHandler);
+    };
+
 
     self.add = function(location) {
       self.locations.push(location);
