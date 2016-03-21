@@ -16,7 +16,9 @@ module.exports = function(grunt) {
           destPrefix: 'src/css/lib'
         },
         files: {
-          'normalize.css': 'normalize-css/normalize.css'
+          'normalize.css': 'normalize-css/normalize.css',
+          'font-awesome.min.css': 'font-awesome/css/font-awesome.min.css',
+          '../fonts': 'font-awesome/fonts'
         }
       },
       js: {
