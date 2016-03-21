@@ -8,6 +8,10 @@ define([
 ], function(c, $, _, ko, gmaps, Location) {
   "use strict";
 
+  // Locations (locations=array of location JSON object, map=Google Map instance)
+  // This is the main ViewModel object for the app
+  // Responsible for handling UI events and updating the
+  // observable array containing location observables
   return function Locations(locations, map) {
     var self = this;
 
@@ -27,6 +31,8 @@ define([
 
     self.activeLocation = null;
 
+    // addMarker(location=location observable)
+    // Adds a Google Maps Marker to the map.
     self.addMarker = function(location) {
       var marker = location.marker;
 
@@ -40,6 +46,8 @@ define([
 
       var name = location.name();
 
+      // query Google API using Geocoder to get map location
+      // corresponding to the location name.
       self.geocoder.geocode({ address: name }, function(results, status) {
         if (status == gmaps.GeocoderStatus.OK) {
 
@@ -84,6 +92,8 @@ define([
       });
     };
 
+    // loadInfoWindowImageFromGoogleMaps
+    // Function responsible for loading Google StreetView image into the info window.
     self.loadInfoWindowImageFromGoogleMaps = function(searchText, infoWindow) {
       var width = 300;
       var height = 100;
@@ -93,6 +103,10 @@ define([
       infoWindow.content += '<img class="bgimg" src="' + streetviewUrl + '">'
     };
 
+    // loadInfoWindowTextFromWikipedia
+    // Function responsible for loading Wikipedia article into the info window.
+    // This function will extract and add the first match to the info window.
+    // This function uses JSONP.
     self.loadInfoWindowTextFromWikipedia = function(searchText, infoWindow) {
       var wikiUrlAction = 'action=opensearch';
       var wikiUrlSearch = 'search=' + searchText;
@@ -131,6 +145,10 @@ define([
       });
     };
 
+    // loadInfoWindowTextFromNewYorkTimes
+    // Function responsible for loading New York Times article into the info window.
+    // This function will extract and add the first match to the info window.
+    // This function uses AJAX.
     self.loadInfoWindowTextFromNewYorkTimes = function(searchText, infoWindow) {
       var nytUrlFilteredQuery = 'fq=type_of_material:("News") AND "' + searchText + '"';
       var nytUrlSortOrder = 'sort=newest';
@@ -160,11 +178,15 @@ define([
       $.getJSON(nytUrl,nytUrlCallbackHandler).fail(nytUrlErrorHandler);
     };
 
-
+    // add(location=location observable)
+    // Adds the location observable to the locations observable array
     self.add = function(location) {
       self.locations.push(location);
     };
 
+    // submitEventHandler
+    // Handles submit event from the location form.
+    // Creates a new location observable and adds it to the array.
     self.submitEventHandler = function(formElement) {
       var $form = $(formElement);
       var $locn = $form.find("#location");
@@ -175,10 +197,16 @@ define([
       $locn.val("");
     };
 
+    // locationClickEventHandler(location=location observable)
+    // Handles locaion click event (used by list items and markers)
     self.locationClickEventHandler = function(location) {
       self.setActiveLocation(location);
     };
 
+    // setActiveLocation
+    // Set the location observable passed in as the "active" location.
+    // Active location is the location whose location is showing the info window.
+    // This will also de-activate the previously active location.
     self.setActiveLocation = function(location) {
       if (self.activeLocation && self.activeLocation.infoWindow) {
         self.activeLocation.marker.setIcon("");
@@ -196,22 +224,32 @@ define([
       }
     };
 
+    // remove(location=location observable)
+    // Removes the location observable passed in from the observable array
     self.remove = function(location) {
       self.removeMarker(location);
       self.locations.remove(location);
     };
 
+    // removeMarker(location=location observable)
+    // Removes the marker from the map
     self.removeMarker = function(location) {
       if(!location.marker) return;
       location.marker.setMap(null);
     };
 
+    // addAllMarkers()
+    // Adds markers to all of the locations in the array
     self.addAllMarkers = function() {
       ko.utils.arrayForEach(self.locations(), function(location) {
         self.addMarker(location);
       });
     };
 
+    // locationsFiltered
+    // Computed observable array that contains a list of 
+    // locations that match the current filter.
+    // Filter searches for a match by checking the location name.
     self.locationsFiltered = ko.computed(function() {
       self.bounds = new gmaps.LatLngBounds();
       if(!self.filter()) {

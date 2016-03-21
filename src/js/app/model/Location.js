@@ -3,10 +3,16 @@ define([
 ], function(ko) {
   "use strict";
   
+  // Location(name=string)
+  // Main observable model that contains data
+  // for a particular location.
   return function Location(name) {
     var self = this;
 
+    // location name observable
     self.name = ko.observable(name);
+
+    // non-persisted Google Map objects
     self.position = null;
     self.marker = null;
     self.infoWindow = null;
