@@ -123,7 +123,6 @@ define([
         clearTimeout(wikiUrlTimeoutHandler);
       };
 
-      console.log("Send Wikipedia request: " + wikiUrl);
       $.ajax({
           url: wikiUrl,
           dataType: 'jsonp',
@@ -154,11 +153,11 @@ define([
           }
       };
       var nytUrlErrorHandler = function(){
-          $nytHeaderElem.text("Failed to get New York Times articles for " + city);
+          console.log("Failed to get New York Times articles for " + searchText);
       };
 
       // New York Times Request
-      $.getJSON(nytUrl,nytUrlCallbackHandler);
+      $.getJSON(nytUrl,nytUrlCallbackHandler).fail(nytUrlErrorHandler);
     };
 
 
