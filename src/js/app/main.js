@@ -16,19 +16,15 @@ define([
   var locations = ko.utils.parseJson(window.localStorage.getItem(c.LOCAL_STORAGE_ITEM_KEY));
 
   var defaultLocations = [
-    { name: "New Berlin, WI" },
-    { name: "Racine, WI" },
-    { name: "South Milwaukee, WI" },
-    { name: "Madison, WI" },
-    { name: "Milwaukee, WI" },
+    { name: "Lambeau Field" },
+    { name: "Milwaukee Art Museum" },
+    { name: "Milwaukee County Zoo" },
+    { name: "University of Wisconsin, Green Bay" },
+    { name: "1 Brewers Way, Milwaukee, WI 53214" },
   ];
 
   if (!locations || locations.length < 1) locations = defaultLocations;
 
   ko.applyBindings(new Locations(locations, map));
-
-
-
-
 
 });
