@@ -180,10 +180,6 @@ define([
     };
 
     self.setActiveLocation = function(location) {
-      if (location === self.activeLocation) {
-        return;
-      }
-
       if (self.activeLocation && self.activeLocation.infoWindow) {
         self.activeLocation.marker.setIcon("");
         self.activeLocation.marker.setAnimation(null);
