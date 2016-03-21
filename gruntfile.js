@@ -7,6 +7,14 @@ module.exports = function(grunt) {
 
   // Grunt configuration
   grunt.initConfig({
+    copy: {
+      main: {
+        expand: true,
+        cwd: 'src/css/fonts/',
+        src: '**',
+        dest: 'dist/css/fonts/'
+      }
+    },
     bowercopy: {
       options: {
         srcPrefix: 'bower_components'
@@ -17,7 +25,7 @@ module.exports = function(grunt) {
         },
         files: {
           'normalize.css': 'normalize-css/normalize.css',
-          'font-awesome.min.css': 'font-awesome/css/font-awesome.min.css',
+          'font-awesome.css': 'font-awesome/css/font-awesome.min.css',
           '../fonts': 'font-awesome/fonts'
         }
       },
@@ -32,36 +40,6 @@ module.exports = function(grunt) {
           'jquery.js': 'jquery/dist/jquery.js',
           'underscore.js': 'underscore/underscore.js'
         }
-      }
-    },
-    imagemin: {
-      png: {
-        options: {
-          optimizationLevel: 7
-        },
-        files: [
-          {
-            expand: true,
-            cwd: 'src/',
-            src: ['**/*.png'],
-            dest: 'dist/',
-            ext: '.png'
-          }
-        ]
-      },
-      jpg: {
-        options: {
-          progressive: true
-        },
-        files: [
-          {
-            expand: true,
-            cwd: 'src/',
-            src: ['**/*.jpg'],
-            dest: 'dist/',
-            ext: '.jpg'
-          }
-        ]
       }
     },
     htmlmin: {
@@ -116,5 +94,5 @@ module.exports = function(grunt) {
   });
 
   // Register default tasks
-  grunt.registerTask('default', ['bowercopy','newer:htmlmin','newer:cssmin','newer:uglify','newer:imagemin','newer:responsive_images']);
+  grunt.registerTask('default', ['copy','bowercopy','newer:htmlmin','newer:cssmin','newer:uglify']);
 };
