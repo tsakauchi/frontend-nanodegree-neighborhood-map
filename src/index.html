@@ -13,16 +13,18 @@
         <script data-main="js/app" src="js/lib/require.js" async></script>
     </head>
     <body>
+        <div id="list">
+            <form data-bind="submit: submitEventHandler">
+                <label for="location">Location: </label><input type="text" id="location" value="">
+                <button>Add</button>
+            </form>
+            <label for="filter">Filter: </label><input type="text" id="filter" value="" data-bind="textInput: filter">
+            <label for="filter-case">Case Sensitive?</label><input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive">
+            <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
+                <li class="list-item"><span data-bind="click: $parent.locationClickEventHandler, text: name"></span>
+                <button class="remove-btn" data-bind="click: $parent.remove">Remove</button></li>
+            </ul>
+        </div>
         <div id="map"></div>
-        <form data-bind="submit: submitEventHandler">
-            <label for="location">Location: </label><input type="text" id="location" value="">
-            <button>Add</button>
-        </form>
-        <label for="filter">Filter: </label><input type="text" id="filter" value="" data-bind="textInput: filter">
-        <label for="filter-case">Case Sensitive?</label><input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive">
-        <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
-            <li><span data-bind="click: $parent.locationClickEventHandler">My filtered location is <span data-bind="text: name"></span> !</span>
-            <button class="remove" data-bind="click: $parent.remove">Remove</button></li>
-        </ul>
     </body>
 </html>
