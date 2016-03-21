@@ -1,15 +1,91 @@
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
-    color: #3a3a3a;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  color: #3a3a3a;
+  background: #E0E2F4;
+}
+
+header, footer {
+  position: fixed;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  color: #ededed;
+  background: #3a3a3a;
+}
+
+header {
+  top: 0;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+footer {
+  bottom: 0;
+  text-align: right;
+}
+
+#main {
+  position: fixed;
+  top: 60px;
+  left: 500px;
+  right: 0;
+  bottom: 40px;
 }
 
 #map {
-  width: 70%;
   height: 100%;
 }
 
 #list {
-  width: 30%;
-  height: 100%;
+  position: fixed;
+  overflow-y: scroll;
+  top: 60px;
+  left: 0;
+  bottom: 40px;
+  width: 500px;
+}
+
+.list-item {
+  list-style-type: none;
+  margin: 10px;
+  background: #AFB6E8;
+  display: flex;
+}
+
+.list-text {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.list-button {
+  padding: 10px;
+}
+
+.list-form {
+  padding: 10px;
+  margin: 10px;
+  background: #AFB6E8; 
+}
+
+#location-filtered-list {
+  padding: 0;
+  margin: 0;
+}
+
+.location-form {
+  display: flex;
+}
+
+#location, #filter {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.location-label {
+  text-align: center;
+}
+
+.location-input {
+  flex-grow: 1;
 }
