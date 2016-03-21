@@ -1,0 +1,1 @@
+define(["app/config","underscore"],function(a,b){"use strict";var c={ENTER_KEY:13,ESCAPE_KEY:27,LOCAL_STORAGE_ITEM_KEY:"neighborhood-map"};return b.extend(c,a),c});

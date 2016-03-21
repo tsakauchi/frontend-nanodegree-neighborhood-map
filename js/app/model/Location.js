@@ -1,0 +1,1 @@
+define(["knockout"],function(a){"use strict";return function(b){var c=this;c.name=a.observable(b),c.position=null,c.marker=null,c.infoWindow=null,c.persistedLocation=function(){return{name:c.name}}}});
