@@ -207,6 +207,7 @@ define([
     };
 
     self.removeMarker = function(location) {
+      if(!location.marker) return;
       location.marker.setMap(null);
     };
 
