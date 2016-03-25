@@ -87,7 +87,7 @@ define([
           self.map.fitBounds(self.bounds);
 
         } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
+          alert('Geocode was not successful for the following reason: ' + status);
         }
       });
     };
@@ -113,8 +113,9 @@ define([
       var wikiUrlFormat = 'format=json';
       var wikiUrl = 'https://en.wikipedia.org/w/api.php?' + wikiUrlAction + '&' + wikiUrlSearch + '&' + wikiUrlFormat;
       var wikiUrlErrorHandler = function(){
-          console.log("Failed to get Wikipedia articles for " + searchText);
-          clearTimeout();
+        location.infoWindowContent += '<h3>Wikipedia</h3>';
+        location.infoWindowContent += '<p>Failed to get Wikipedia articles for ' + searchText + '</p>';
+        clearTimeout();
       };
       var wikiUrlTimeoutHandler = setTimeout(wikiUrlErrorHandler,4000);
       var wikiUrlCallbackHandler = function(data) { 
@@ -127,11 +128,11 @@ define([
         var snippets = data[2];
         var web_urls = data[3];
 
+        location.infoWindowContent += '<h3>Wikipedia</h3>';
         if (titles.length > 0) {
-          location.infoWindowContent += '<h3>Wikipedia</h3>';
           location.infoWindowContent += '<p>' + snippets[0] + '</p>' + '<p>' + web_urls[0] + '</p>';
         } else {
-          console.log("No Wikipedia entry found for " + searchText);
+          location.infoWindowContent += '<p>No Wikipedia entry found for ' + searchText + '</p>';
         }
 
         clearTimeout(wikiUrlTimeoutHandler);
@@ -156,22 +157,22 @@ define([
       var nytUrlApiKey = 'api-key=9df2b415e47006caa7d29120aeec20f6:9:74652536';
       var nytUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?' + nytUrlFilteredQuery + '&' + nytUrlSortOrder + '&' + nytUrlFields + '&' + nytUrlApiKey;
       var nytUrlCallbackHandler = function(data) {
-
           if(!data) return;
           if(!data.response) return;
           if(!data.response.docs) return;
 
+          location.infoWindowContent += '<h3>New York Times</h3>';
           if (data.response.docs.length > 0) {
             var article = data.response.docs[0];
-            location.infoWindowContent += '<h3>New York Times</h3>';
             location.infoWindowContent += '<h4>' + article.headline.main + '</h4>';
             location.infoWindowContent += '<p>' + article.snippet + '</p>' + '<p>' + article.web_url + '</p>';
           } else {
-            console.log("No NYT entry found for " + searchText);
+            location.infoWindowContent += '<p>No NYT entry found for ' + searchText + '</p>';
           }
       };
       var nytUrlErrorHandler = function(){
-          console.log("Failed to get New York Times articles for " + searchText);
+        location.infoWindowContent += '<h3>New York Times</h3>';
+        location.infoWindowContent += '<p>Failed to get New York Times articles for ' + searchText + '</p>';
       };
 
       // New York Times Request
