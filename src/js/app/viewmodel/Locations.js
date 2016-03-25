@@ -31,6 +31,8 @@ define([
 
     self.activeLocation = null;
 
+    self.activeInfoWindow = null;
+
     // addMarker(location=location observable)
     // Adds a Google Maps Marker to the map.
     self.addMarker = function(location) {
@@ -55,8 +57,6 @@ define([
 
           self.bounds.extend(position);
 
-          var content = '<h2>' + name + '</h2>';
-
           marker = new gmaps.Marker({
             map: self.map,
             position: position,
@@ -64,25 +64,25 @@ define([
             animation: gmaps.Animation.DROP
           });
 
-          var infoWindow = new gmaps.InfoWindow({
-            content: content
-          });
+          if (!self.activeInfoWindow) {
+            self.activeInfoWindow = new gmaps.InfoWindow();
+
+            gmaps.event.addListener(self.activeInfoWindow, 'closeclick', function() {
+              self.setActiveLocation(null);
+            });
+          }
 
           location.position = position;
           location.marker = marker;
-          location.infoWindow = infoWindow;
 
           gmaps.event.addListener(marker, 'click', function() {
             self.setActiveLocation(location);
           });
 
-          gmaps.event.addListener(infoWindow, 'closeclick', function() {
-            self.setActiveLocation(null);
-          });
-
-          self.loadInfoWindowTextFromWikipedia(name, location.infoWindow);
-          self.loadInfoWindowTextFromNewYorkTimes(name, location.infoWindow);
-          self.loadInfoWindowImageFromGoogleMaps(name, location.infoWindow);
+          location.infoWindowContent += '<h2>' + name + '</h2>';
+          self.loadInfoWindowContentFromGoogleMaps(name, location);
+          self.loadInfoWindowContentFromWikipedia(name, location);
+          self.loadInfoWindowContentFromNewYorkTimes(name, location);
 
           self.map.fitBounds(self.bounds);
 
@@ -92,22 +92,22 @@ define([
       });
     };
 
-    // loadInfoWindowImageFromGoogleMaps
+    // loadInfoWindowContentFromGoogleMaps
     // Function responsible for loading Google StreetView image into the info window.
-    self.loadInfoWindowImageFromGoogleMaps = function(searchText, infoWindow) {
+    self.loadInfoWindowContentFromGoogleMaps = function(searchText, location) {
       var width = 300;
       var height = 100;
       var streetviewUrl = "https://maps.googleapis.com/maps/api/streetview?size=" + width + "x" + height + "&location=" + searchText + "&heading=0&pitch=0";
 
-      infoWindow.content += '<h3>Street View</h3>';
-      infoWindow.content += '<img class="bgimg" src="' + streetviewUrl + '">'
+      location.infoWindowContent += '<h3>Street View</h3>';
+      location.infoWindowContent += '<img class="bgimg" src="' + streetviewUrl + '">'
     };
 
-    // loadInfoWindowTextFromWikipedia
+    // loadInfoWindowContentFromWikipedia
     // Function responsible for loading Wikipedia article into the info window.
     // This function will extract and add the first match to the info window.
     // This function uses JSONP.
-    self.loadInfoWindowTextFromWikipedia = function(searchText, infoWindow) {
+    self.loadInfoWindowContentFromWikipedia = function(searchText, location) {
       var wikiUrlAction = 'action=opensearch';
       var wikiUrlSearch = 'search=' + searchText;
       var wikiUrlFormat = 'format=json';
@@ -128,8 +128,8 @@ define([
         var web_urls = data[3];
 
         if (titles.length > 0) {
-          infoWindow.content += '<h3>Wikipedia</h3>';
-          infoWindow.content += '<p>' + snippets[0] + '</p>' + '<p>' + web_urls[0] + '</p>';
+          location.infoWindowContent += '<h3>Wikipedia</h3>';
+          location.infoWindowContent += '<p>' + snippets[0] + '</p>' + '<p>' + web_urls[0] + '</p>';
         } else {
           console.log("No Wikipedia entry found for " + searchText);
         }
@@ -145,11 +145,11 @@ define([
       });
     };
 
-    // loadInfoWindowTextFromNewYorkTimes
+    // loadInfoWindowContentFromNewYorkTimes
     // Function responsible for loading New York Times article into the info window.
     // This function will extract and add the first match to the info window.
     // This function uses AJAX.
-    self.loadInfoWindowTextFromNewYorkTimes = function(searchText, infoWindow) {
+    self.loadInfoWindowContentFromNewYorkTimes = function(searchText, location) {
       var nytUrlFilteredQuery = 'fq=type_of_material:("News") AND "' + searchText + '"';
       var nytUrlSortOrder = 'sort=newest';
       var nytUrlFields = 'fl=headline,pub_date,snippet,web_url';
@@ -163,9 +163,9 @@ define([
 
           if (data.response.docs.length > 0) {
             var article = data.response.docs[0];
-            infoWindow.content += '<h3>New York Times</h3>';
-            infoWindow.content += '<h4>' + article.headline.main + '</h4>';
-            infoWindow.content += '<p>' + article.snippet + '</p>' + '<p>' + article.web_url + '</p>';
+            location.infoWindowContent += '<h3>New York Times</h3>';
+            location.infoWindowContent += '<h4>' + article.headline.main + '</h4>';
+            location.infoWindowContent += '<p>' + article.snippet + '</p>' + '<p>' + article.web_url + '</p>';
           } else {
             console.log("No NYT entry found for " + searchText);
           }
@@ -208,15 +208,20 @@ define([
     // Active location is the location whose location is showing the info window.
     // This will also de-activate the previously active location.
     self.setActiveLocation = function(location) {
-      if (self.activeLocation && self.activeLocation.infoWindow) {
+
+      if (self.activeLocation) {
         self.activeLocation.marker.setIcon("");
         self.activeLocation.marker.setAnimation(null);
-        self.activeLocation.infoWindow.close();
       }
 
-      if (location && location.infoWindow) {
-        location.infoWindow.open(self.map, location.marker);
+      if (self.activeInfoWindow) {
+        self.activeInfoWindow.close();
+      }
+
+      if (location) {
         self.activeLocation = location;
+        self.activeInfoWindow.setContent(self.activeLocation.infoWindowContent);
+        self.activeInfoWindow.open(self.map, self.activeLocation.marker);
         // Google Map Icons
         // http://stackoverflow.com/questions/17746740/google-map-icons-with-visualrefresh
         self.activeLocation.marker.setIcon("http://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2");

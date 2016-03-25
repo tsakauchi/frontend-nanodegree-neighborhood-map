@@ -15,7 +15,9 @@ define([
     // non-persisted Google Map objects
     self.position = null;
     self.marker = null;
-    self.infoWindow = null;
+
+    // non-persisted data
+    self.infoWindowContent = "";
 
     // JSON returned by this function is what is persisted
     // in local storage.
