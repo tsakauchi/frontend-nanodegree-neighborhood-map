@@ -25,6 +25,8 @@ define([
       return new Location(location.name);
     }));
 
+    self.locationText = ko.observable("");
+
     self.filter = ko.observable("");
 
     self.isFilterCaseSensitive = ko.observable(false);
@@ -189,13 +191,8 @@ define([
     // Handles submit event from the location form.
     // Creates a new location observable and adds it to the array.
     self.submitEventHandler = function(formElement) {
-      var $form = $(formElement);
-      var $locn = $form.find("#location");
-      var name = $locn.val();
-
-      self.add(new Location(name));
-
-      $locn.val("");
+      self.add(new Location(self.locationText()));
+      self.locationText("");
     };
 
     // locationClickEventHandler(location=location observable)
