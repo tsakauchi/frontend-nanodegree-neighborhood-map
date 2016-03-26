@@ -15,40 +15,42 @@
     </head>
     <body>
         <header>Neighborhood Map</header>
-        <div id="list">
-            <div class="list-form">
-                <form data-bind="submit: submitEventHandler">
-                    <label for="location">Location:</label>
-                    <div class="location-form">
-                        <div class="location-input">
-                            <input type="text" id="locationText" value="" data-bind="value: locationText">
+        <div class="container">
+            <div id="list">
+                <div class="list-form">
+                    <form data-bind="submit: submitEventHandler">
+                        <label for="location">Location:</label>
+                        <div class="location-form">
+                            <div class="location-input">
+                                <input type="text" id="locationText" value="" data-bind="value: locationText">
+                            </div>
+                            <div class="location-button">
+                                <button><i class="fa fa-plus"></i></button>
+                            </div>
                         </div>
-                        <div class="location-button">
-                            <button><i class="fa fa-plus"></i></button>
-                        </div>
+                    </form>
+                    <label for="filter">Filter:</label>
+                    <div>
+                        <input type="text" id="filter" value="" data-bind="textInput: filter">
                     </div>
-                </form>
-                <label for="filter">Filter:</label>
-                <div>
-                    <input type="text" id="filter" value="" data-bind="textInput: filter">
+                    <input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive"><label for="filter-case">Case Sensitive</label>
                 </div>
-                <input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive"><label for="filter-case">Case Sensitive</label>
+                <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
+                    <li class="list-item">
+                        <div class="list-text" data-bind="click: $parent.locationClickEventHandler">
+                            <span data-bind="text: name"></span>
+                        </div>
+                        <div class="list-button">
+                            <button class="remove-btn" data-bind="click: $parent.remove">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
-                <li class="list-item">
-                    <div class="list-text" data-bind="click: $parent.locationClickEventHandler">
-                        <span data-bind="text: name"></span>
-                    </div>
-                    <div class="list-button">
-                        <button class="remove-btn" data-bind="click: $parent.remove">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div id="main">
-            <div id="map"></div>
+            <div id="main">
+                <div id="map"></div>
+            </div>
         </div>
         <footer>Tsugi Sakauchi @ Fairland Circle 2016</footer>
     </body>
