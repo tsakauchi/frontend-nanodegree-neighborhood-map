@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="css/app.css">
         <script data-main="js/app" src="js/lib/require.js" async></script>
     </head>
-    <body>
+    <body data-bind="hotkeydown: [{ 'esc' : escHotkeyDownHandler }, { 'shift+del' : delHotkeyDownHandler }, { 'home' : homeHotkeyDownHandler }]">
         <header>Neighborhood Map</header>
         <div class="container">
             <div id="list">
@@ -34,6 +34,7 @@
                         <input type="text" id="filter" value="" data-bind="textInput: filter">
                     </div>
                     <input type="checkbox" id="filter-case" data-bind="checked: isFilterCaseSensitive"><label for="filter-case">Case Sensitive</label>
+                    <p class="hotkey-inst">Hotkeys:<br>[HOME:Focus location]<br>[ESC:Reset filter]<br>[Shift+DEL:Delete selected location]</p>
                 </div>
                 <ul id="location-filtered-list" data-bind="foreach: locationsFiltered">
                     <li class="list-item">

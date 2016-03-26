@@ -86,6 +86,11 @@ footer {
   flex-grow: 1;
 }
 
+.hotkey-inst {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
 @media (max-width: 800px) {
   .container {
     flex-direction: column;
