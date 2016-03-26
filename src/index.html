@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="css/app.css">
         <script data-main="js/app" src="js/lib/require.js" async></script>
     </head>
-    <body>
+    <body data-bind="hotkeydown: [{ 'esc' : escHotkeyDownHandler }, { 'shift+del' : delHotkeyDownHandler }, { 'home' : homeHotkeyDownHandler }]">
         <header>Neighborhood Map</header>
         <div class="container">
             <div id="list">

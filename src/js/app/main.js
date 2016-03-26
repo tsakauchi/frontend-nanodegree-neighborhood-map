@@ -4,8 +4,9 @@ define([
   "underscore",
   "knockout",
   "googlemaps",
+  "knockout-hotkeys",
   "app/viewmodel/Locations"
-], function(c, $, _, ko, gmaps, Locations) {
+], function(c, $, _, ko, gmaps, hotkeys, Locations) {
   "use strict";
 
   var map = new gmaps.Map(document.getElementById('map'), {

@@ -249,6 +249,25 @@ define([
       });
     };
 
+    // delHotkeyDownHandler()
+    // Delete active location
+    self.delHotkeyDownHandler = function() {
+      self.remove(self.activeLocation);
+    };
+
+    // escHotkeyDownHandler()
+    // Clear filter and set cursor to filter textbox
+    self.escHotkeyDownHandler = function() {
+      self.filter("");
+      $("#filter").focus();
+    };
+
+    // homeHotkeyDownHandler()
+    // Set cursor to location textbox
+    self.homeHotkeyDownHandler = function() {
+      $("#locationText").focus();
+    };
+
     // locationsFiltered
     // Computed observable array that contains a list of 
     // locations that match the current filter.
