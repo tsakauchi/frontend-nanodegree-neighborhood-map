@@ -5,7 +5,7 @@ This repository contains a website for Frontend Nanodegree Project 5a Neighborho
 This project implements a "Neighborhood Map" web app that displays an editable list of locations along with their corresponding locations on Google Map. The map contains markers to represent each location in the list. Clicking on each location will display info-window that contains information related to that location aggregated from Wikipedia and New York Times.
 
 ## How do I run this project?
-Per project requirement, the project ships with "dist" directory that contains the distributable version of the web app. To run the app, simply open dist/index.html with Chrome (or equivalent browser).
+Per project requirement, the project ships with "dist" directory that contains the distributable version of the web app. To run the app, simply open dist/index.html with Chrome (or equivalent browser). Alternatively, you can visit the [GitHub project page for this project](http://tsakauchi.github.io/frontend-nanodegree-neighborhood-map/).
 
 Alternatively, you can build the project by following the steps below:
 1. Check this project out from GitHub.
